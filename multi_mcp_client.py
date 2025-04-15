@@ -12,17 +12,17 @@ model = ChatOpenAI(model="gpt-4o-mini")
 async def main():
     async with MultiServerMCPClient(
         {
-        "math": {
-            "command": "python",
-            "args": ["./server/math_server.py"],
-            "transport": "stdio",
-        },
-        "weather": {
-            "command": "python",
-            "args": ["./server/weather_server.py"],
-            "transport": "stdio",
-        },			
-
+            "math": {
+                "command": "python",
+                # Make sure to update to the full absolute path to your math_server.py file
+                "args": ["./server/math_server.py"],
+                "transport": "stdio",
+            },
+            "weather": {
+                # make sure you start your weather server on port 8000
+                "url": "http://localhost:8000/sse",
+                "transport": "sse",
+            }
         }
     ) as client:
         agent = create_react_agent(model, client.get_tools())
